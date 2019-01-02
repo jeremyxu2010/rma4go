@@ -1,0 +1,19 @@
+language: go
+go:
+- 1.11.x
+go_import_path: github.com/winjeg/rma4go
+before_install: GO111MODULE=on go mod vendor
+script:
+- export VERSION_TAG=$(git describe --tags --abbrev=0)
+- GOOS=linux GOARCH=amd64 go build -o rma4go-${VERSION_TAG}-linux-amd64 github.com/winjeg/rma4go
+- GOOS=darwin GOARCH=amd64 go build -o rma4go-${VERSION_TAG}-darwin-amd64 github.com/winjeg/rma4go
+deploy:
+  provider: releases
+  api_key:
+    secure: rx1RofrXet/M9aOb3JYFBhXj11NojpruyN2QCk37+JqgDINlHbOcC7IQ2vgIq10ElAWBCxZNthsriDEIhwM24xK0nzLvPJ7bRHCSnc86bUm09tQ1yPvKKUlnYVY0KpGZz/YCBan7kvgjmUDoO93+pMmxj7COTn9AckC4+TCL47qOWhRMJnhkJrXG3Xk9s0+U5NKCR3sGujtPky7PN64Ijv+H7L58CjYW92TPFf7TvLhaj0LX/Vv4YkTFq5vCZsgUO95PEQBf8zPhC+Ss53yxESLzDq8uderckfePl6VTcw+jq9ZzVnO5SF2GJIiSzgIS9f7xEwg42pUStpyrYaI5X15e4fgVQNn58EWowFCCd3SsbsYMGlTwi5GHF+WvKcW6pzHz84/0lC8EJIn3ygcGeVRN4GuR2pDimGIYLd3zSeoVyQdvTxklqfWTn2DLykN/FZc2beSWKL4Pd75KtmSY66+AJVqb0E85jl14XCGlWZkZzUjSJg33YUaIIJ1UzaMQQ4/rIY0EgUuBTl62OBJvd3X9oCWwU7PH4N9F4cqSG46+upkYTzVCYNewzg4wQSJ7Fbuuj+5LoURTrI/V2y7iqxOn+vMwRyBKOz3h1DJv5m86UPr1RQ8bLpW04hMp31ANTeRww7QEIqNFS0BuWamPfDxd1srkSxQZFh7pQShQNbY=
+  file:
+    - "rma4go-${VERSION_TAG}-linux-amd64"
+    - "rma4go-${VERSION_TAG}-darwin-amd64"
+  skip_cleanup: true
+  on:
+    tags: true
